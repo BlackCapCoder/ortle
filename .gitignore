@@ -1,0 +1,11 @@
+# .gitignore for ortle
+
+# exclude executables
+ortle
+
+
+# exclude build files
+*.o
+source/*.o
+source/*/*.o
+
