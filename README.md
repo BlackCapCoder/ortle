@@ -34,7 +34,7 @@ compton.
 
 ## Building
 
-* `$ git clone https://github.com/aoba1217/ortle`
+* `$ git clone https://github.com/aoba1217/ortle.git`
 * `$ cd ortle`
 * `$ make`
 
