@@ -15,7 +15,6 @@ Geometry::Geometry(::Display* display, ::Window target, ::Window relative)
 {
 	assert(display != nullptr);
 	assert(target != None);
-	assert(relative != None);
 
 
 	XGetGeometry(display, target, &root, &x, &y, &width, &height, &border_width, &depth);

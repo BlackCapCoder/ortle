@@ -223,7 +223,7 @@ void Ortle::run()
 
 void Ortle::process_pending_events()
 {
-	while (XPending(m_display) > 0) {
+	while (g_running && XPending(m_display) > 0) {
 
 		XEvent event;
 		XNextEvent(m_display, &event);
@@ -235,7 +235,7 @@ void Ortle::process_pending_events()
 				break;
 
 			case ClientMessage:
-				// do nothing
+				TRACE("client message", event.xclient.window, event.xclient.message_type, event.xclient.format);
 				break;
 			
 			case ConfigureNotify:
