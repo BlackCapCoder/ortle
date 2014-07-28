@@ -151,7 +151,7 @@ InputOutputWindow::~InputOutputWindow()
 {
 	if (m_display != nullptr) {
 
-		TRACE("stopping management of window", static_cast<Window>(*this));
+		TRACE("stopping management of window", *this);
 
 		release_and_destroy();
 	}
@@ -321,7 +321,7 @@ void InputOutputWindow::reconfigure(int x, int y, int width, int height, int bor
 
 			if (m_pixmap != None) {
 
-				X11::Geometry pixmap_geometry(m_display, static_cast<::Window>(m_pixmap));
+				X11::Geometry pixmap_geometry(m_display, m_pixmap);
 
 				if (pixmap_geometry.width && pixmap_geometry.height) {
 					width = static_cast<int>(pixmap_geometry.width) - 2 * border_width;
