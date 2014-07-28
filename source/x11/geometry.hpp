@@ -12,10 +12,10 @@ namespace X11 {
 
 struct Geometry {
 
-	Geometry(::Display* display, ::Window target, ::Window relative = None);
+	Geometry(::Display* display, ::Drawable target, ::Window relative = None);
 
 
-	::Window window;
+	::Drawable drawable;
 	::Window root;
 
 	int x;

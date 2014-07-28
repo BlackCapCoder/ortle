@@ -208,6 +208,7 @@ void InputOutputWindow::render_impl(Renderer& renderer)
 		gl::BindTexture(gl::TEXTURE_2D, m_texture);
 
 		// TRACE("DRAWING", m_shaped, m_texture, m_x, m_y, m_width, m_height, m_border_width);
+		// TRACE("DRAWING", *this, m_texture, m_x, m_y, m_width, m_height, m_border_width, m_pixmap);
 
 		renderer.set_border_width(static_cast<float>(m_border_width));
 		renderer.set_window_geometry(
@@ -298,7 +299,9 @@ void InputOutputWindow::reconfigure(int x, int y, int width, int height, int bor
 	// events pending for this window
 
 	if (m_mapped) {
+
 		if (width != m_width || height != m_height || border_width != m_border_width) {
+			
 			bind_composite_pixmap();
 
 			//!!
@@ -317,9 +320,13 @@ void InputOutputWindow::reconfigure(int x, int y, int width, int height, int bor
 			// itself:
 
 			if (m_pixmap != None) {
+
 				X11::Geometry pixmap_geometry(m_display, static_cast<::Window>(m_pixmap));
-				width = static_cast<int>(pixmap_geometry.width) - 2 * border_width;
-				height = static_cast<int>(pixmap_geometry.height) - 2 * border_width;
+
+				if (pixmap_geometry.width && pixmap_geometry.height) {
+					width = static_cast<int>(pixmap_geometry.width) - 2 * border_width;
+					height = static_cast<int>(pixmap_geometry.height) - 2 * border_width;
+				}
 			}
 
 			// which is both really smart (the local window dimensions will 
@@ -328,6 +335,10 @@ void InputOutputWindow::reconfigure(int x, int y, int width, int height, int bor
 			// sync; though i think the shape issue is moot because the shape 
 			// data is probably going to be out of sync with our local data 
 			// more often than it is with the pixmap).
+
+			// the XGetGeometry call (in X11::Geometry's constructor) can fail 
+			// also, even though the pixmap is valid.  it doesn't generate a
+			// BadDrawable, it just fails.  this is slightly tilting.
 
 			// i don't like it, but i haven't been able to think of a better 
 			// solution.
