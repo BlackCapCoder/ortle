@@ -19,6 +19,7 @@ extern ::GLXContext (*CreateContextAttribsARB)(::Display*, ::GLXFBConfig, ::GLXC
 extern void (*BindTexImageEXT)(::Display*, ::GLXDrawable, int, int const*);
 extern void (*ReleaseTexImageEXT)(::Display*, ::GLXDrawable, int);
 extern void (*SwapIntervalEXT)(::Display*, ::GLXDrawable, int);
+extern void (*SwapIntervalMESA)(int);
 
 
 void load_functions();

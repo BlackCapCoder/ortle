@@ -34,6 +34,10 @@ using SwapIntervalEXT_sig = void (*)(::Display*, ::GLXDrawable, int);
 SwapIntervalEXT_sig SwapIntervalEXT = nullptr;
 
 
+using SwapIntervalMESA_sig = void (*)(int);
+SwapIntervalMESA_sig SwapIntervalMESA = nullptr;
+
+
 
 
 void load_functions()
@@ -62,7 +66,16 @@ void load_functions()
 	if (SwapIntervalEXT == nullptr) {
 		SwapIntervalEXT = reinterpret_cast<SwapIntervalEXT_sig>(glXGetProcAddress(reinterpret_cast<GLubyte const*>("glXSwapIntervalEXT")));
 		if (!SwapIntervalEXT) {
-			throw GLX::InitializationError("Failed to load glXSwapIntervalEXT.");
+			SwapIntervalEXT = nullptr;
+			// throw GLX::InitializationError("Failed to load glXSwapIntervalEXT.");
+		}
+	}
+
+	if (SwapIntervalMESA == nullptr) {
+		SwapIntervalMESA = reinterpret_cast<SwapIntervalMESA_sig>(glXGetProcAddress(reinterpret_cast<GLubyte const*>("glXSwapIntervalMESA")));
+		if (!SwapIntervalMESA) {
+			SwapIntervalMESA = nullptr;
+			// throw GLX::InitializationError("Failed to load glXSwapIntervalMESA.");
 		}
 	}
 }

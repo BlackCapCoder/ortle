@@ -293,6 +293,14 @@ void OutputWindow::swap_interval(int interval)
 {
 	assert(m_display != nullptr);
 
-	GLX::SwapIntervalEXT(m_display, m_glx_window, interval);
+	if (GLX::SwapIntervalEXT) {
+		GLX::SwapIntervalEXT(m_display, m_glx_window, interval);
+	}
+	else if (GLX::SwapIntervalMESA) {
+		GLX::SwapIntervalMESA(interval);
+	}
+	else {
+		throw InitializationError("GLX extension GLX_MESA_swap_control or GLX_EXT_swap_control required.");
+	}
 }
 
