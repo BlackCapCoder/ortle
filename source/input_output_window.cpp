@@ -14,6 +14,7 @@
 #include "utility/trace.hpp"
 
 #include "x11/exceptions.hpp"
+#include "x11/geometry.hpp"
 #include "x11/rectangle_list.hpp"
 #include "x11/pixmap.hpp"
 #include "x11/shape_extents.hpp"
@@ -299,6 +300,39 @@ void InputOutputWindow::reconfigure(int x, int y, int width, int height, int bor
 	if (m_mapped) {
 		if (width != m_width || height != m_height || border_width != m_border_width) {
 			bind_composite_pixmap();
+
+			//!!
+
+			// i had originally thought that even though 
+			// XCompositeNameWindowPixmap (which is called by 
+			// bind_composite_pixmap up there) would undoubtedly return a 
+			// pixmap that is ahead of the width and height that were sent 
+			// with this event, the fact that XNextEvent would be called after 
+			// this function would guarantee that our local window dimensions 
+			// would catch up before we drew anything.
+
+			// this is not the case.  you have to resize the window quickly to 
+			// see it, but the texture still wobbles a little.  the compton 
+			// devs solved the problem by just querying the composite pixmap
+			// itself:
+
+			if (m_pixmap != None) {
+				X11::Geometry pixmap_geometry(m_display, static_cast<::Window>(m_pixmap));
+				width = static_cast<int>(pixmap_geometry.width) - 2 * border_width;
+				height = static_cast<int>(pixmap_geometry.height) - 2 * border_width;
+			}
+
+			// which is both really smart (the local window dimensions will 
+			// always match the pixmap's), but really annoying (it requires an 
+			// extra trip to the server AND might leave our shape data out of 
+			// sync; though i think the shape issue is moot because the shape 
+			// data is probably going to be out of sync with our local data 
+			// more often than it is with the pixmap).
+
+			// i don't like it, but i haven't been able to think of a better 
+			// solution.
+
+			//!!
 		}
 	}
 
