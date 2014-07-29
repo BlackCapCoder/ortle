@@ -7,10 +7,12 @@ correctly.  It currently does not provide any eye candy, and possibly never
 will.
 
 
-## Current Status: TESTING
+## Current Status: UNSTABLE/TESTING
 
-I have been using Ortle without issues for some time now, but your mileage may
-vary.  If you encounter any problems, please share them.
+Ortle has been stable for me with an Nvidia graphics card and the proprietary 
+driver for months.  It is not stable when I use nouveau (my GPU locks up), and 
+it apparently doesn't work at all on Intel Haswell hardware.  **Please be 
+careful when giving it a try!**
 
 
 ## Requirements
