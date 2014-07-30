@@ -214,6 +214,8 @@ void Ortle::run()
 
 		m_renderer.render(m_window_manager.begin(), m_window_manager.end());
 
+		gl::Finish();
+
 		m_output_window.swap_buffers();
 	}
 }
