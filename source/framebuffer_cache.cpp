@@ -136,7 +136,7 @@ GLXFBConfig FramebufferCache::choose(int const* attributes)
 		return result;
 	}
 	else {
-		throw FramebufferError("Compatible framebuffer not found.");
+		throw FramebufferError("Compatible framebuffer could not be chosen.");
 	}
 }
 
@@ -233,7 +233,8 @@ GLXFBConfig FramebufferCache::find(VisualID visual_id, int depth)
 		return result;
 	}
 	else {
-		throw FramebufferError("Compatible framebuffer not found.");
+		TRACE(visual_id, depth);
+		throw FramebufferError("Compatible framebuffer could not be found.");
 	}
 }
 
