@@ -30,7 +30,7 @@ public:
 private:
 
 	GLenum m_code;
-	
+
 };
 
 

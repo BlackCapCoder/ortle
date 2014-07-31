@@ -188,22 +188,22 @@ namespace gl
 			//Safe bool idiom. Joy!
 			typedef void (LoadTest::*bool_type)() const;
 			void big_long_name_that_really_doesnt_matter() const {}
-			
+
 		public:
 			operator bool_type() const
 			{
 				return m_isLoaded ? &LoadTest::big_long_name_that_really_doesnt_matter : 0;
 			}
-			
+
 			int GetNumMissing() const {return m_numMissing;}
-			
+
 			LoadTest() : m_isLoaded(false), m_numMissing(0) {}
 			LoadTest(bool isLoaded, int numMissing) : m_isLoaded(isLoaded), m_numMissing(numMissing) {}
 		private:
 			bool m_isLoaded;
 			int m_numMissing;
 		};
-		
+
 	} //namespace exts
 	enum
 	{
@@ -408,7 +408,7 @@ namespace gl
 		RGB10_A2                         = 0x8059,
 		RGBA12                           = 0x805A,
 		RGBA16                           = 0x805B,
-		
+
 		CONSTANT_COLOR                   = 0x8001,
 		ONE_MINUS_CONSTANT_COLOR         = 0x8002,
 		CONSTANT_ALPHA                   = 0x8003,
@@ -484,7 +484,7 @@ namespace gl
 		CONSTANT_BORDER                  = 0x8151,
 		REPLICATE_BORDER                 = 0x8153,
 		CONVOLUTION_BORDER_COLOR         = 0x8154,
-		
+
 		UNSIGNED_BYTE_3_3_2              = 0x8032,
 		UNSIGNED_SHORT_4_4_4_4           = 0x8033,
 		UNSIGNED_SHORT_5_5_5_1           = 0x8034,
@@ -519,7 +519,7 @@ namespace gl
 		SMOOTH_LINE_WIDTH_RANGE          = 0x0B22,
 		SMOOTH_LINE_WIDTH_GRANULARITY    = 0x0B23,
 		ALIASED_LINE_WIDTH_RANGE         = 0x846E,
-		
+
 		TEXTURE0                         = 0x84C0,
 		TEXTURE1                         = 0x84C1,
 		TEXTURE2                         = 0x84C2,
@@ -579,7 +579,7 @@ namespace gl
 		NUM_COMPRESSED_TEXTURE_FORMATS   = 0x86A2,
 		COMPRESSED_TEXTURE_FORMATS       = 0x86A3,
 		CLAMP_TO_BORDER                  = 0x812D,
-		
+
 		BLEND_DST_RGB                    = 0x80C8,
 		BLEND_SRC_RGB                    = 0x80C9,
 		BLEND_DST_ALPHA                  = 0x80CA,
@@ -596,7 +596,7 @@ namespace gl
 		TEXTURE_DEPTH_SIZE               = 0x884A,
 		TEXTURE_COMPARE_MODE             = 0x884C,
 		TEXTURE_COMPARE_FUNC             = 0x884D,
-		
+
 		BUFFER_SIZE                      = 0x8764,
 		BUFFER_USAGE                     = 0x8765,
 		QUERY_COUNTER_BITS               = 0x8864,
@@ -624,7 +624,7 @@ namespace gl
 		DYNAMIC_READ                     = 0x88E9,
 		DYNAMIC_COPY                     = 0x88EA,
 		SAMPLES_PASSED                   = 0x8914,
-		
+
 		BLEND_EQUATION_RGB               = 0x8009,
 		VERTEX_ATTRIB_ARRAY_ENABLED      = 0x8622,
 		VERTEX_ATTRIB_ARRAY_SIZE         = 0x8623,
@@ -705,7 +705,7 @@ namespace gl
 		STENCIL_BACK_REF                 = 0x8CA3,
 		STENCIL_BACK_VALUE_MASK          = 0x8CA4,
 		STENCIL_BACK_WRITEMASK           = 0x8CA5,
-		
+
 		PIXEL_PACK_BUFFER                = 0x88EB,
 		PIXEL_UNPACK_BUFFER              = 0x88EC,
 		PIXEL_PACK_BUFFER_BINDING        = 0x88ED,
@@ -722,9 +722,9 @@ namespace gl
 		SRGB8_ALPHA8                     = 0x8C43,
 		COMPRESSED_SRGB                  = 0x8C48,
 		COMPRESSED_SRGB_ALPHA            = 0x8C49,
-		
+
 		VERTEX_ARRAY_BINDING             = 0x85B5,
-		
+
 		RG                               = 0x8227,
 		RG_INTEGER                       = 0x8228,
 		R8                               = 0x8229,
@@ -747,23 +747,23 @@ namespace gl
 		RG16UI                           = 0x823A,
 		RG32I                            = 0x823B,
 		RG32UI                           = 0x823C,
-		
+
 		COMPRESSED_RED_RGTC1             = 0x8DBB,
 		COMPRESSED_SIGNED_RED_RGTC1      = 0x8DBC,
 		COMPRESSED_RG_RGTC2              = 0x8DBD,
 		COMPRESSED_SIGNED_RG_RGTC2       = 0x8DBE,
-		
+
 		MAP_READ_BIT                     = 0x0001,
 		MAP_WRITE_BIT                    = 0x0002,
 		MAP_INVALIDATE_RANGE_BIT         = 0x0004,
 		MAP_INVALIDATE_BUFFER_BIT        = 0x0008,
 		MAP_FLUSH_EXPLICIT_BIT           = 0x0010,
 		MAP_UNSYNCHRONIZED_BIT           = 0x0020,
-		
+
 		HALF_FLOAT                       = 0x140B,
-		
+
 		FRAMEBUFFER_SRGB                 = 0x8DB9,
-		
+
 		INVALID_FRAMEBUFFER_OPERATION    = 0x0506,
 		FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING = 0x8210,
 		FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE = 0x8211,
@@ -844,11 +844,11 @@ namespace gl
 		MAX_SAMPLES                      = 0x8D57,
 		TEXTURE_LUMINANCE_TYPE           = 0x8C14,
 		TEXTURE_INTENSITY_TYPE           = 0x8C15,
-		
+
 		DEPTH_COMPONENT32F               = 0x8CAC,
 		DEPTH32F_STENCIL8                = 0x8CAD,
 		FLOAT_32_UNSIGNED_INT_24_8_REV   = 0x8DAD,
-		
+
 		COMPARE_REF_TO_TEXTURE           = 0x884E,
 		CLIP_DISTANCE0                   = 0x3000,
 		CLIP_DISTANCE1                   = 0x3001,
@@ -949,7 +949,7 @@ namespace gl
 		BUFFER_ACCESS_FLAGS              = 0x911F,
 		BUFFER_MAP_LENGTH                = 0x9120,
 		BUFFER_MAP_OFFSET                = 0x9121,
-		
+
 		UNIFORM_BUFFER                   = 0x8A11,
 		UNIFORM_BUFFER_BINDING           = 0x8A28,
 		UNIFORM_BUFFER_START             = 0x8A29,
@@ -983,12 +983,12 @@ namespace gl
 		MAX_GEOMETRY_UNIFORM_BLOCKS      = 0x8A2C,
 		MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS = 0x8A32,
 		UNIFORM_BLOCK_REFERENCED_BY_GEOMETRY_SHADER = 0x8A45,
-		
+
 		COPY_READ_BUFFER                 = 0x8F36,
 		COPY_WRITE_BUFFER                = 0x8F37,
 		COPY_READ_BUFFER_BINDING         = 0x8F36,
 		COPY_WRITE_BUFFER_BINDING        = 0x8F37,
-		
+
 		SAMPLER_2D_RECT                  = 0x8B63,
 		SAMPLER_2D_RECT_SHADOW           = 0x8B64,
 		SAMPLER_BUFFER                   = 0x8DC2,
@@ -1019,16 +1019,16 @@ namespace gl
 		SIGNED_NORMALIZED                = 0x8F9C,
 		PRIMITIVE_RESTART                = 0x8F9D,
 		PRIMITIVE_RESTART_INDEX          = 0x8F9E,
-		
+
 		DEPTH_CLAMP                      = 0x864F,
-		
+
 		QUADS_FOLLOW_PROVOKING_VERTEX_CONVENTION = 0x8E4C,
 		FIRST_VERTEX_CONVENTION          = 0x8E4D,
 		LAST_VERTEX_CONVENTION           = 0x8E4E,
 		PROVOKING_VERTEX                 = 0x8E4F,
-		
+
 		TEXTURE_CUBE_MAP_SEAMLESS        = 0x884F,
-		
+
 		MAX_SERVER_WAIT_TIMEOUT          = 0x9111,
 		OBJECT_TYPE                      = 0x9112,
 		SYNC_CONDITION                   = 0x9113,
@@ -1044,7 +1044,7 @@ namespace gl
 		WAIT_FAILED_                     = 0x911D,
 		TIMEOUT_IGNORED                  = 0xFFFFFFFFFFFFFFFF,
 		SYNC_FLUSH_COMMANDS_BIT          = 0x00000001,
-		
+
 		SAMPLE_POSITION                  = 0x8E50,
 		SAMPLE_MASK                      = 0x8E51,
 		SAMPLE_MASK_VALUE                = 0x8E52,
@@ -1066,9 +1066,9 @@ namespace gl
 		MAX_COLOR_TEXTURE_SAMPLES        = 0x910E,
 		MAX_DEPTH_TEXTURE_SAMPLES        = 0x910F,
 		MAX_INTEGER_SAMPLES              = 0x9110,
-		
+
 		BGRA                             = 0x80E1,
-		
+
 		CONTEXT_CORE_PROFILE_BIT         = 0x00000001,
 		CONTEXT_COMPATIBILITY_PROFILE_BIT = 0x00000002,
 		LINES_ADJACENCY                  = 0x000A,
@@ -1091,33 +1091,33 @@ namespace gl
 		MAX_GEOMETRY_OUTPUT_COMPONENTS   = 0x9124,
 		MAX_FRAGMENT_INPUT_COMPONENTS    = 0x9125,
 		CONTEXT_PROFILE_MASK             = 0x9126,
-		
+
 		RGB10_A2UI                       = 0x906F,
-		
+
 		TEXTURE_SWIZZLE_R                = 0x8E42,
 		TEXTURE_SWIZZLE_G                = 0x8E43,
 		TEXTURE_SWIZZLE_B                = 0x8E44,
 		TEXTURE_SWIZZLE_A                = 0x8E45,
 		TEXTURE_SWIZZLE_RGBA             = 0x8E46,
-		
+
 		TIME_ELAPSED                     = 0x88BF,
 		TIMESTAMP                        = 0x8E28,
-		
+
 		UNSIGNED_INT_2_10_10_10_REV      = 0x8368,
 		INT_2_10_10_10_REV               = 0x8D9F,
-		
+
 		SRC1_ALPHA                       = 0x8589,
 		SRC1_COLOR                       = 0x88F9,
 		ONE_MINUS_SRC1_COLOR             = 0x88FA,
 		ONE_MINUS_SRC1_ALPHA             = 0x88FB,
 		MAX_DUAL_SOURCE_DRAW_BUFFERS     = 0x88FC,
-		
+
 		ANY_SAMPLES_PASSED               = 0x8C2F,
-		
+
 		SAMPLER_BINDING                  = 0x8919,
-		
+
 		VERTEX_ATTRIB_ARRAY_DIVISOR      = 0x88FE,
-		
+
 	};
 	extern void (CODEGEN_FUNCPTR *CullFace)(GLenum mode);
 	extern void (CODEGEN_FUNCPTR *FrontFace)(GLenum mode);
@@ -1183,15 +1183,15 @@ namespace gl
 	extern GLboolean (CODEGEN_FUNCPTR *IsTexture)(GLuint texture);
 	extern void (CODEGEN_FUNCPTR *Indexub)(GLubyte c);
 	extern void (CODEGEN_FUNCPTR *Indexubv)(const GLubyte *c);
-	
-	
+
+
 	extern void (CODEGEN_FUNCPTR *BlendColor)(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
 	extern void (CODEGEN_FUNCPTR *BlendEquation)(GLenum mode);
 	extern void (CODEGEN_FUNCPTR *DrawRangeElements)(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const GLvoid *indices);
 	extern void (CODEGEN_FUNCPTR *TexImage3D)(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
 	extern void (CODEGEN_FUNCPTR *TexSubImage3D)(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const GLvoid *pixels);
 	extern void (CODEGEN_FUNCPTR *CopyTexSubImage3D)(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height);
-	
+
 	extern void (CODEGEN_FUNCPTR *ActiveTexture)(GLenum texture);
 	extern void (CODEGEN_FUNCPTR *SampleCoverage)(GLfloat value, GLboolean invert);
 	extern void (CODEGEN_FUNCPTR *CompressedTexImage3D)(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const GLvoid *data);
@@ -1201,7 +1201,7 @@ namespace gl
 	extern void (CODEGEN_FUNCPTR *CompressedTexSubImage2D)(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const GLvoid *data);
 	extern void (CODEGEN_FUNCPTR *CompressedTexSubImage1D)(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format, GLsizei imageSize, const GLvoid *data);
 	extern void (CODEGEN_FUNCPTR *GetCompressedTexImage)(GLenum target, GLint level, GLvoid *img);
-	
+
 	extern void (CODEGEN_FUNCPTR *BlendFuncSeparate)(GLenum sfactorRGB, GLenum dfactorRGB, GLenum sfactorAlpha, GLenum dfactorAlpha);
 	extern void (CODEGEN_FUNCPTR *MultiDrawArrays)(GLenum mode, const GLint *first, const GLsizei *count, GLsizei drawcount);
 	extern void (CODEGEN_FUNCPTR *MultiDrawElements)(GLenum mode, const GLsizei *count, GLenum type, const GLvoid* const *indices, GLsizei drawcount);
@@ -1209,7 +1209,7 @@ namespace gl
 	extern void (CODEGEN_FUNCPTR *PointParameterfv)(GLenum pname, const GLfloat *params);
 	extern void (CODEGEN_FUNCPTR *PointParameteri)(GLenum pname, GLint param);
 	extern void (CODEGEN_FUNCPTR *PointParameteriv)(GLenum pname, const GLint *params);
-	
+
 	extern void (CODEGEN_FUNCPTR *GenQueries)(GLsizei n, GLuint *ids);
 	extern void (CODEGEN_FUNCPTR *DeleteQueries)(GLsizei n, const GLuint *ids);
 	extern GLboolean (CODEGEN_FUNCPTR *IsQuery)(GLuint id);
@@ -1229,7 +1229,7 @@ namespace gl
 	extern GLboolean (CODEGEN_FUNCPTR *UnmapBuffer)(GLenum target);
 	extern void (CODEGEN_FUNCPTR *GetBufferParameteriv)(GLenum target, GLenum pname, GLint *params);
 	extern void (CODEGEN_FUNCPTR *GetBufferPointerv)(GLenum target, GLenum pname, GLvoid* *params);
-	
+
 	extern void (CODEGEN_FUNCPTR *BlendEquationSeparate)(GLenum modeRGB, GLenum modeAlpha);
 	extern void (CODEGEN_FUNCPTR *DrawBuffers)(GLsizei n, const GLenum *bufs);
 	extern void (CODEGEN_FUNCPTR *StencilOpSeparate)(GLenum face, GLenum sfail, GLenum dpfail, GLenum dppass);
@@ -1287,26 +1287,26 @@ namespace gl
 	extern void (CODEGEN_FUNCPTR *UniformMatrix4fv)(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
 	extern void (CODEGEN_FUNCPTR *ValidateProgram)(GLuint program);
 	extern void (CODEGEN_FUNCPTR *VertexAttribPointer)(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer);
-	
+
 	extern void (CODEGEN_FUNCPTR *UniformMatrix2x3fv)(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
 	extern void (CODEGEN_FUNCPTR *UniformMatrix3x2fv)(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
 	extern void (CODEGEN_FUNCPTR *UniformMatrix2x4fv)(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
 	extern void (CODEGEN_FUNCPTR *UniformMatrix4x2fv)(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
 	extern void (CODEGEN_FUNCPTR *UniformMatrix3x4fv)(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
 	extern void (CODEGEN_FUNCPTR *UniformMatrix4x3fv)(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
-	
+
 	extern void (CODEGEN_FUNCPTR *BindVertexArray)(GLuint ren_array);
 	extern void (CODEGEN_FUNCPTR *DeleteVertexArrays)(GLsizei n, const GLuint *arrays);
 	extern void (CODEGEN_FUNCPTR *GenVertexArrays)(GLsizei n, GLuint *arrays);
 	extern GLboolean (CODEGEN_FUNCPTR *IsVertexArray)(GLuint ren_array);
-	
-	
-	
+
+
+
 	extern GLvoid* (CODEGEN_FUNCPTR *MapBufferRange)(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
 	extern void (CODEGEN_FUNCPTR *FlushMappedBufferRange)(GLenum target, GLintptr offset, GLsizeiptr length);
-	
-	
-	
+
+
+
 	extern GLboolean (CODEGEN_FUNCPTR *IsRenderbuffer)(GLuint renderbuffer);
 	extern void (CODEGEN_FUNCPTR *BindRenderbuffer)(GLenum target, GLuint renderbuffer);
 	extern void (CODEGEN_FUNCPTR *DeleteRenderbuffers)(GLsizei n, const GLuint *renderbuffers);
@@ -1327,8 +1327,8 @@ namespace gl
 	extern void (CODEGEN_FUNCPTR *BlitFramebuffer)(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
 	extern void (CODEGEN_FUNCPTR *RenderbufferStorageMultisample)(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height);
 	extern void (CODEGEN_FUNCPTR *FramebufferTextureLayer)(GLenum target, GLenum attachment, GLuint texture, GLint level, GLint layer);
-	
-	
+
+
 	extern void (CODEGEN_FUNCPTR *ColorMaski)(GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a);
 	extern void (CODEGEN_FUNCPTR *GetBooleani_v)(GLenum target, GLuint index, GLboolean *data);
 	extern void (CODEGEN_FUNCPTR *GetIntegeri_v)(GLenum target, GLuint index, GLint *data);
@@ -1387,7 +1387,7 @@ namespace gl
 	extern void (CODEGEN_FUNCPTR *ClearBufferfv)(GLenum buffer, GLint drawbuffer, const GLfloat *value);
 	extern void (CODEGEN_FUNCPTR *ClearBufferfi)(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil);
 	extern const GLubyte * (CODEGEN_FUNCPTR *GetStringi)(GLenum name, GLuint index);
-	
+
 	extern void (CODEGEN_FUNCPTR *GetUniformIndices)(GLuint program, GLsizei uniformCount, const GLchar* const *uniformNames, GLuint *uniformIndices);
 	extern void (CODEGEN_FUNCPTR *GetActiveUniformsiv)(GLuint program, GLsizei uniformCount, const GLuint *uniformIndices, GLenum pname, GLint *params);
 	extern void (CODEGEN_FUNCPTR *GetActiveUniformName)(GLuint program, GLuint uniformIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformName);
@@ -1395,24 +1395,24 @@ namespace gl
 	extern void (CODEGEN_FUNCPTR *GetActiveUniformBlockiv)(GLuint program, GLuint uniformBlockIndex, GLenum pname, GLint *params);
 	extern void (CODEGEN_FUNCPTR *GetActiveUniformBlockName)(GLuint program, GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName);
 	extern void (CODEGEN_FUNCPTR *UniformBlockBinding)(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding);
-	
+
 	extern void (CODEGEN_FUNCPTR *CopyBufferSubData)(GLenum readTarget, GLenum writeTarget, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size);
-	
+
 	extern void (CODEGEN_FUNCPTR *DrawArraysInstanced)(GLenum mode, GLint first, GLsizei count, GLsizei instancecount);
 	extern void (CODEGEN_FUNCPTR *DrawElementsInstanced)(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei instancecount);
 	extern void (CODEGEN_FUNCPTR *TexBuffer)(GLenum target, GLenum internalformat, GLuint buffer);
 	extern void (CODEGEN_FUNCPTR *PrimitiveRestartIndex)(GLuint index);
-	
-	
+
+
 	extern void (CODEGEN_FUNCPTR *DrawElementsBaseVertex)(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLint basevertex);
 	extern void (CODEGEN_FUNCPTR *DrawRangeElementsBaseVertex)(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const GLvoid *indices, GLint basevertex);
 	extern void (CODEGEN_FUNCPTR *DrawElementsInstancedBaseVertex)(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei instancecount, GLint basevertex);
 	extern void (CODEGEN_FUNCPTR *MultiDrawElementsBaseVertex)(GLenum mode, const GLsizei *count, GLenum type, const GLvoid* const *indices, GLsizei drawcount, const GLint *basevertex);
-	
-	
+
+
 	extern void (CODEGEN_FUNCPTR *ProvokingVertex)(GLenum mode);
-	
-	
+
+
 	extern GLsync (CODEGEN_FUNCPTR *FenceSync)(GLenum condition, GLbitfield flags);
 	extern GLboolean (CODEGEN_FUNCPTR *IsSync)(GLsync sync);
 	extern void (CODEGEN_FUNCPTR *DeleteSync)(GLsync sync);
@@ -1420,23 +1420,23 @@ namespace gl
 	extern void (CODEGEN_FUNCPTR *WaitSync)(GLsync sync, GLbitfield flags, GLuint64 timeout);
 	extern void (CODEGEN_FUNCPTR *GetInteger64v)(GLenum pname, GLint64 *params);
 	extern void (CODEGEN_FUNCPTR *GetSynciv)(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values);
-	
+
 	extern void (CODEGEN_FUNCPTR *TexImage2DMultisample)(GLenum target, GLsizei samples, GLint internalformat, GLsizei width, GLsizei height, GLboolean fixedsamplelocations);
 	extern void (CODEGEN_FUNCPTR *TexImage3DMultisample)(GLenum target, GLsizei samples, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedsamplelocations);
 	extern void (CODEGEN_FUNCPTR *GetMultisamplefv)(GLenum pname, GLuint index, GLfloat *val);
 	extern void (CODEGEN_FUNCPTR *SampleMaski)(GLuint index, GLbitfield mask);
-	
-	
+
+
 	extern void (CODEGEN_FUNCPTR *GetInteger64i_v)(GLenum target, GLuint index, GLint64 *data);
 	extern void (CODEGEN_FUNCPTR *GetBufferParameteri64v)(GLenum target, GLenum pname, GLint64 *params);
 	extern void (CODEGEN_FUNCPTR *FramebufferTexture)(GLenum target, GLenum attachment, GLuint texture, GLint level);
-	
-	
-	
+
+
+
 	extern void (CODEGEN_FUNCPTR *QueryCounter)(GLuint id, GLenum target);
 	extern void (CODEGEN_FUNCPTR *GetQueryObjecti64v)(GLuint id, GLenum pname, GLint64 *params);
 	extern void (CODEGEN_FUNCPTR *GetQueryObjectui64v)(GLuint id, GLenum pname, GLuint64 *params);
-	
+
 	extern void (CODEGEN_FUNCPTR *VertexP2ui)(GLenum type, GLuint value);
 	extern void (CODEGEN_FUNCPTR *VertexP2uiv)(GLenum type, const GLuint *value);
 	extern void (CODEGEN_FUNCPTR *VertexP3ui)(GLenum type, GLuint value);
@@ -1475,11 +1475,11 @@ namespace gl
 	extern void (CODEGEN_FUNCPTR *VertexAttribP3uiv)(GLuint index, GLenum type, GLboolean normalized, const GLuint *value);
 	extern void (CODEGEN_FUNCPTR *VertexAttribP4ui)(GLuint index, GLenum type, GLboolean normalized, GLuint value);
 	extern void (CODEGEN_FUNCPTR *VertexAttribP4uiv)(GLuint index, GLenum type, GLboolean normalized, const GLuint *value);
-	
+
 	extern void (CODEGEN_FUNCPTR *BindFragDataLocationIndexed)(GLuint program, GLuint colorNumber, GLuint index, const GLchar *name);
 	extern GLint (CODEGEN_FUNCPTR *GetFragDataIndex)(GLuint program, const GLchar *name);
-	
-	
+
+
 	extern void (CODEGEN_FUNCPTR *GenSamplers)(GLsizei count, GLuint *samplers);
 	extern void (CODEGEN_FUNCPTR *DeleteSamplers)(GLsizei count, const GLuint *samplers);
 	extern GLboolean (CODEGEN_FUNCPTR *IsSampler)(GLuint sampler);
@@ -1494,18 +1494,18 @@ namespace gl
 	extern void (CODEGEN_FUNCPTR *GetSamplerParameterIiv)(GLuint sampler, GLenum pname, GLint *params);
 	extern void (CODEGEN_FUNCPTR *GetSamplerParameterfv)(GLuint sampler, GLenum pname, GLfloat *params);
 	extern void (CODEGEN_FUNCPTR *GetSamplerParameterIuiv)(GLuint sampler, GLenum pname, GLuint *params);
-	
+
 	extern void (CODEGEN_FUNCPTR *VertexAttribDivisor)(GLuint index, GLuint divisor);
-	
+
 	namespace sys
 	{
-		
+
 		exts::LoadTest LoadFunctions();
-		
+
 		int GetMinorVersion();
 		int GetMajorVersion();
 		bool IsVersionGEQ(int majorVersion, int minorVersion);
-		
+
 	} //namespace sys
 } //namespace gl
 #endif //POINTER_CPP_GENERATED_HEADEROPENGL_HPP

@@ -17,7 +17,7 @@ ShapeExtents::ShapeExtents(::Display* display, ::Window target)
 	assert(display != nullptr);
 	assert(target != None);
 
-	
+
 	XShapeQueryExtents(
 		display, target,
 		&bounding_shaped, &bounding_x, &bounding_y, &bounding_width, &bounding_height,

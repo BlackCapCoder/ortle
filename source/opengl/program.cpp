@@ -35,7 +35,7 @@ std::vector<GLchar> info_log(GLuint program)
 }
 
 
-} // namespace 
+} // namespace
 
 
 

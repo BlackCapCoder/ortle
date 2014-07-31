@@ -20,8 +20,8 @@ struct WallpaperPixmap {
 	WallpaperPixmap();
 	WallpaperPixmap(::Display* display, ::Window root);
 
-	
-	operator ::Pixmap() const 
+
+	operator ::Pixmap() const
 	{
 		return pixmap;
 	}

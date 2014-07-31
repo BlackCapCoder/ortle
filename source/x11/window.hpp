@@ -23,7 +23,7 @@ public:
 		int depth,
 		int c_class,
 		::Visual* visual,
-		unsigned long attribute_mask, 
+		unsigned long attribute_mask,
 		::XSetWindowAttributes& attributes
 	);
 

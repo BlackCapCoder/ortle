@@ -123,7 +123,7 @@ GLXFBConfig FramebufferCache::choose(int const* attributes)
 
 			catch (...) {
 
-				// X11::VisualInfo's constructor might fail.  if it does we 
+				// X11::VisualInfo's constructor might fail.  if it does we
 				// just skip the current GLXFBConfig and move on to the next
 				// one.
 			}

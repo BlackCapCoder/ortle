@@ -67,7 +67,7 @@
 // Damage::~Damage()
 // {
 // 	if (m_display != nullptr) {
-		
+
 // 		// TRACE("destroying damage", m_damage);
 
 // 		XDamageDestroy(m_display, m_damage);
