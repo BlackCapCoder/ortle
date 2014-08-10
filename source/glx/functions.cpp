@@ -34,8 +34,18 @@ using SwapIntervalEXT_sig = void (*)(::Display*, ::GLXDrawable, int);
 SwapIntervalEXT_sig SwapIntervalEXT = nullptr;
 
 
-using SwapIntervalMESA_sig = void (*)(int);
+using SwapIntervalMESA_sig = int (*)(int);
 SwapIntervalMESA_sig SwapIntervalMESA = nullptr;
+
+
+
+
+using GetVideoSyncSGI_sig = int (*)(unsigned int*);
+GetVideoSyncSGI_sig GetVideoSyncSGI = nullptr;
+
+
+using WaitVideoSyncSGI_sig = int (*)(int, int, unsigned int*);
+WaitVideoSyncSGI_sig WaitVideoSyncSGI = nullptr;
 
 
 
@@ -48,6 +58,8 @@ void load_functions()
 			throw GLX::InitializationError("Failed to load glXCreateContextAttribsARB.");
 		}
 	}
+
+
 
 	if (BindTexImageEXT == nullptr) {
 		BindTexImageEXT = reinterpret_cast<BindTexImageEXT_sig>(glXGetProcAddress(reinterpret_cast<GLubyte const*>("glXBindTexImageEXT")));
@@ -66,7 +78,6 @@ void load_functions()
 	if (SwapIntervalEXT == nullptr) {
 		SwapIntervalEXT = reinterpret_cast<SwapIntervalEXT_sig>(glXGetProcAddress(reinterpret_cast<GLubyte const*>("glXSwapIntervalEXT")));
 		if (!SwapIntervalEXT) {
-			SwapIntervalEXT = nullptr;
 			// throw GLX::InitializationError("Failed to load glXSwapIntervalEXT.");
 		}
 	}
@@ -74,8 +85,23 @@ void load_functions()
 	if (SwapIntervalMESA == nullptr) {
 		SwapIntervalMESA = reinterpret_cast<SwapIntervalMESA_sig>(glXGetProcAddress(reinterpret_cast<GLubyte const*>("glXSwapIntervalMESA")));
 		if (!SwapIntervalMESA) {
-			SwapIntervalMESA = nullptr;
 			// throw GLX::InitializationError("Failed to load glXSwapIntervalMESA.");
+		}
+	}
+
+
+
+	if (GetVideoSyncSGI == nullptr) {
+		GetVideoSyncSGI = reinterpret_cast<GetVideoSyncSGI_sig>(glXGetProcAddress(reinterpret_cast<GLubyte const*>("glXGetVideoSyncSGI")));
+		if (!GetVideoSyncSGI) {
+			// throw GLX::InitializationError("Failed to load glXGetVideoSyncSGI.");
+		}
+	}
+	
+	if (WaitVideoSyncSGI == nullptr) {
+		WaitVideoSyncSGI = reinterpret_cast<WaitVideoSyncSGI_sig>(glXGetProcAddress(reinterpret_cast<GLubyte const*>("glXWaitVideoSyncSGI")));
+		if (!WaitVideoSyncSGI) {
+			// throw GLX::InitializationError("Failed to load glXWaitVideoSyncSGI.");
 		}
 	}
 }

@@ -19,7 +19,10 @@ extern ::GLXContext (*CreateContextAttribsARB)(::Display*, ::GLXFBConfig, ::GLXC
 extern void (*BindTexImageEXT)(::Display*, ::GLXDrawable, int, int const*);
 extern void (*ReleaseTexImageEXT)(::Display*, ::GLXDrawable, int);
 extern void (*SwapIntervalEXT)(::Display*, ::GLXDrawable, int);
-extern void (*SwapIntervalMESA)(int);
+extern int (*SwapIntervalMESA)(int);
+
+extern int (*GetVideoSyncSGI)(unsigned int*);
+extern int (*WaitVideoSyncSGI)(int, int, unsigned int*);
 
 
 void load_functions();
