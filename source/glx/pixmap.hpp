@@ -13,7 +13,7 @@
 
 namespace GLX {
 
-	
+
 class Pixmap {
 
 public:

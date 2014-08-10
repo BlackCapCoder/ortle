@@ -23,7 +23,7 @@ int const Pixmap::rgb_attributes[] = {
 	GLX_TEXTURE_TARGET_EXT, GLX_TEXTURE_2D_EXT,
 	GLX_TEXTURE_FORMAT_EXT, GLX_TEXTURE_FORMAT_RGB_EXT,
 
-	None 
+	None
 };
 
 

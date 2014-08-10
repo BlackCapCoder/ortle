@@ -12,7 +12,7 @@ namespace X11 {
 
 /// set_click_through
 
-/// Sets the ShapeInput region of the given window to an empty region, thereby 
+/// Sets the ShapeInput region of the given window to an empty region, thereby
 /// disabling mouse input.
 
 void set_click_through(::Display* display, ::Window window);

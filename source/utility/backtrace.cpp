@@ -108,7 +108,7 @@ char const* demangled_line(char const* input_line)
 }
 
 
-} // namespace 
+} // namespace
 
 
 #endif

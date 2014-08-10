@@ -17,7 +17,7 @@ public:
 	InitializationError(char const* message)
 		: std::runtime_error(message)
 	{}
-	
+
 };
 
 

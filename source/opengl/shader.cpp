@@ -33,7 +33,7 @@ std::vector<GLchar> info_log(GLuint shader)
 }
 
 
-} // namespace 
+} // namespace
 
 
 
@@ -59,7 +59,7 @@ Shader::Shader(GLenum type, char const* source)
 
 	gl::CompileShader(handle);
 
-	
+
 	GLint status = compile_status(handle);
 
 	if (!status) {
