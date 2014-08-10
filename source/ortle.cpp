@@ -5,6 +5,8 @@
 #include "renderer.hpp"
 #include "window_manager.hpp"
 
+#include "glx/functions.hpp"
+
 #include "opengl/core330.hpp"
 #include "opengl/exceptions.hpp"
 
@@ -30,6 +32,13 @@
 
 #include <csignal>
 
+#include <iostream>
+
+#ifdef GHETTO_PROFILE
+	#include <chrono>
+#endif
+
+
 
 
 
@@ -47,21 +56,21 @@ void signal_handler(int)
 
 int x11_error_handler(Display*, XErrorEvent* error)
 {
-	// i try as much as possible to rely only upon the events the X server 
-	// sends me to maintain the local copy of the server's state, but 
-	// sometimes the events are not sufficient, and i need to query the 
-	// server.  these requests generally use information that is a little 
+	// i try as much as possible to rely only upon the events the X server
+	// sends me to maintain the local copy of the server's state, but
+	// sometimes the events are not sufficient, and i need to query the
+	// server.  these requests generally use information that is a little
 	// behind the server's current state, and can therefore generate errors.
 
 	// this also means that the information returned is a little ahead of the
 	// local copy, but since these requests are sent in the middle of the event
-	// loop (or when the server is grabbed), the local state _should_ catch up 
+	// loop (or when the server is grabbed), the local state _should_ catch up
 	// to them before any drawing is done.
 
 
-	// XGetWindowAttributes is used to determine the class (e.g. InputOnly) 
-	// and dimensions of a window when adding it to the window manager.  it 
-	// can generate a BadWindow event if the window has already been 
+	// XGetWindowAttributes is used to determine the class (e.g. InputOnly)
+	// and dimensions of a window when adding it to the window manager.  it
+	// can generate a BadWindow event if the window has already been
 	// destroyed.
 
 	if (error->request_code == X_GetWindowAttributes && error->error_code == BadWindow) {
@@ -71,9 +80,9 @@ int x11_error_handler(Display*, XErrorEvent* error)
 
 
 	// XCompositeNameWindowPixmap is used to get a pixmap of a given window.
-	// it can similarly fail if the window has already been destroyed, but can 
-	// also fail if the window is off-screen or otherwise invisible.  in such 
-	// cases, its return value of None is used to determine that the window 
+	// it can similarly fail if the window has already been destroyed, but can
+	// also fail if the window is off-screen or otherwise invisible.  in such
+	// cases, its return value of None is used to determine that the window
 	// should not be drawn.
 
 	else if (error->request_code == X_CompositeNameWindowPixmap) {
@@ -82,8 +91,8 @@ int x11_error_handler(Display*, XErrorEvent* error)
 	}
 
 
-	// XShapeGetRectangles fails for mysterious reasons that are assumed to be 
-	// similar, if not the same, to the other two errors above.  
+	// XShapeGetRectangles fails for mysterious reasons that are assumed to be
+	// similar, if not the same, to the other two errors above.
 
 	else if (error->request_code == X_ShapeGetRectangles) {
 		TRACE("WARNING", "XShapeGetRectangles failed", error->error_code);
@@ -91,12 +100,12 @@ int x11_error_handler(Display*, XErrorEvent* error)
 	}
 
 
-	// XCopyArea is used when we try to copy the root window's wallpaper.  
-	// since this is set as a property on the root window, and we have no idea 
+	// XCopyArea is used when we try to copy the root window's wallpaper.
+	// since this is set as a property on the root window, and we have no idea
 	// if it's even a pixmap, let alone one of the right size, depth, etc. we
 	// need to catch the error here.
 
-	// since we wait on an XNoExposeEvent before attempting to draw the result 
+	// since we wait on an XNoExposeEvent before attempting to draw the result
 	// of a copy, eating this event should be safe.
 
 	else if (error->request_code == X_CopyArea && (error->error_code == BadDrawable || error->error_code == BadMatch)) {
@@ -120,7 +129,7 @@ int x11_error_handler(Display*, XErrorEvent* error)
 
 
 // pending_shape_notify
-// predicate used with XCheckIfEvent to compress shape events for a window, so 
+// predicate used with XCheckIfEvent to compress shape events for a window, so
 // that only the most recent event is processed.
 
 Bool pending_shape_notify(Display*, XEvent* event, XPointer arg)
@@ -171,7 +180,7 @@ Ortle::Ortle(int, char**)
 
 
 #ifdef DEBUG_SYNCHRONIZE
-	
+
 	XSynchronize(m_display, True);
 
 #endif
@@ -187,38 +196,202 @@ Ortle::~Ortle()
 
 
 
-void Ortle::run()
-{
-	m_output_window.reconfigure();
-	m_output_window.swap_interval(1);
+#ifdef GHETTO_PROFILE
 
-	X11::Geometry root_geometry(m_display, m_root);
-	m_renderer.set_viewport(root_geometry.width, root_geometry.height);
+	void Ortle::run()
+	{
+		unsigned int last_retrace = 0;
 
-	gl::ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		m_output_window.reconfigure();
+		m_output_window.swap_interval(1);
 
-	while (g_running) {
+		X11::Geometry root_geometry(m_display, m_root);
+		m_renderer.set_viewport(root_geometry.width, root_geometry.height);
 
-		// usually this is done in a while loop because there can be  more than 
-		// one error waiting.  but, for now at least, every openglerror is 
-		// fatal.
+		gl::ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-		GLenum error = gl::NO_ERROR_;
-		if ((error = gl::GetError()) != gl::NO_ERROR_) {
-			throw OpenGL::StateError("Error in OpenGL State", error);
+		auto start = std::chrono::high_resolution_clock::now();
+
+		auto event_ticks = start - start;
+		auto render_ticks = event_ticks;
+		auto swap_ticks = event_ticks;
+		auto wait_ticks = event_ticks;
+
+		int iteration = 0;
+
+		while (g_running) {
+
+			unsigned int current_retrace = 0;
+
+			++iteration;
+			iteration %= 60;
+
+			if (iteration == 0) {
+				TRACE("event ticks", event_ticks.count());
+				TRACE("render ticks", render_ticks.count());
+				TRACE("swap ticks", swap_ticks.count());
+				TRACE("wait ticks", wait_ticks.count());
+				TRACE("total", event_ticks.count() + render_ticks.count() + swap_ticks.count() + wait_ticks.count());
+
+				event_ticks -= event_ticks;
+				render_ticks -= render_ticks;
+				swap_ticks -= swap_ticks;
+				wait_ticks -= wait_ticks;
+			}
+
+			// usually this is done in a while loop because there can be  more than
+			// one error waiting.  but, for now at least, every openglerror is
+			// fatal.
+
+			GLenum error = gl::NO_ERROR_;
+			if ((error = gl::GetError()) != gl::NO_ERROR_) {
+				throw OpenGL::StateError("Error in OpenGL State", error);
+			}
+
+			auto p0 = std::chrono::high_resolution_clock::now();
+
+			process_pending_events();
+
+			// XSync(m_display, False);
+
+			auto p1 = std::chrono::high_resolution_clock::now();
+
+			// XSync(m_display, False);
+			// glXWaitX();
+			// gl::Flush();
+
+			gl::Clear(gl::COLOR_BUFFER_BIT);
+
+			m_renderer.render(m_window_manager.begin(), m_window_manager.end());
+
+
+			// a current problem is that everything lags when moving a window over
+			// an accelerated chromium window.  what happens is that we spend too
+			// much time in glXSwapBuffers.
+
+			// unsigned int current_retrace = 0;
+			// GLX::GetVideoSyncSGI(&current_retrace);
+
+			// option one: wait for the next retrace:
+			// this is no good because you can miss it and end up waiting a long
+			// time
+
+			// GLX::WaitVideoSyncSGI(current_retrace, 1, &current_retrace);
+
+
+			// option two: wait for the next odd frame if current is even, or wait
+			// for the next even frame is current is odd
+
+			// this is what compton does and might be as good as we can get.  it
+			// is still bad because the skipping frame is ugly.
+
+			// GLX::WaitVideoSyncSGI(2, (current_retrace + 1) % 2, &current_retrace);
+
+
+			auto p2 = std::chrono::high_resolution_clock::now();
+
+			// XSync(m_display, False);
+			// glXWaitX();
+			// gl::Flush();
+
+			// gl::Finish();
+
+			// TRACE("RETRACE", last_retrace, current_retrace);
+
+
+			m_output_window.swap_buffers();
+
+			auto p3 = std::chrono::high_resolution_clock::now();
+
+			if (GLX::WaitVideoSyncSGI) {
+
+				GLX::WaitVideoSyncSGI(1, 0, &current_retrace);
+
+				if (current_retrace == last_retrace) {
+					TRACE("WARNING", last_retrace, current_retrace);
+				}
+				else if (current_retrace > last_retrace + 1) {
+					TRACE("WARNING", last_retrace, current_retrace);
+				}
+
+				last_retrace = current_retrace;
+			}
+
+			auto p4 = std::chrono::high_resolution_clock::now();
+
+
+			event_ticks += p1 - p0;
+			render_ticks += p2 - p1;
+			swap_ticks += p3 - p2;
+			wait_ticks += p4 - p3;
+
+			if ((p4-p0).count() > 1e9 / 45) {
+				TRACE("TICKS", "1-0", (p1 - p0).count());
+				TRACE("TICKS", "2-1", (p2 - p1).count());
+				TRACE("TICKS", "3-2", (p3 - p2).count());
+				TRACE("TICKS", "4-3", (p4 - p3).count());
+				TRACE("TICKS", "tot", (p3-p0).count());
+			}
 		}
-
-		process_pending_events();
-
-		gl::Clear(gl::COLOR_BUFFER_BIT);
-
-		m_renderer.render(m_window_manager.begin(), m_window_manager.end());
-
-		gl::Finish();
-
-		m_output_window.swap_buffers();
 	}
-}
+
+
+#else
+
+	void Ortle::run()
+	{
+		unsigned int last_retrace = 0;
+
+		m_output_window.reconfigure();
+		m_output_window.swap_interval(1);
+
+		X11::Geometry root_geometry(m_display, m_root);
+		m_renderer.set_viewport(root_geometry.width, root_geometry.height);
+
+		gl::ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+		while (g_running) {
+
+			// usually this is done in a while loop because there can be  more than
+			// one error waiting.  but, for now at least, every openglerror is
+			// fatal.
+
+			GLenum error = gl::NO_ERROR_;
+			if ((error = gl::GetError()) != gl::NO_ERROR_) {
+				throw OpenGL::StateError("Error in OpenGL State", error);
+			}
+
+
+			process_pending_events();
+
+
+			gl::Clear(gl::COLOR_BUFFER_BIT);
+
+			m_renderer.render(m_window_manager.begin(), m_window_manager.end());
+
+
+			m_output_window.swap_buffers();
+
+
+			if (GLX::WaitVideoSyncSGI) {
+
+				unsigned int current_retrace = 0;
+
+				GLX::WaitVideoSyncSGI(1, 0, &current_retrace);
+
+				if (current_retrace == last_retrace) {
+					TRACE("WARNING", last_retrace, current_retrace);
+				}
+				else if (current_retrace > last_retrace + 1) {
+					TRACE("WARNING", last_retrace, current_retrace);
+				}
+
+				last_retrace = current_retrace;
+			}
+		}
+	}
+
+#endif 
 
 
 
@@ -239,20 +412,20 @@ void Ortle::process_pending_events()
 			case ClientMessage:
 				TRACE("client message", event.xclient.window, event.xclient.message_type, event.xclient.format);
 				break;
-			
+
 			case ConfigureNotify:
 				on_configure_notify(event.xconfigure);
 				break;
-			
+
 
 			case CreateNotify:
 				on_create_notify(event.xcreatewindow);
 				break;
-			
+
 			case DestroyNotify:
 				on_destroy_notify(event.xdestroywindow);
 				break;
-			
+
 			// case Expose:
 			// 	on_expose(event.xexpose);
 			// 	break;
@@ -268,11 +441,11 @@ void Ortle::process_pending_events()
 			case NoExpose:
 				on_no_expose(event.xnoexpose);
 				break;
-			
+
 			case PropertyNotify:
 				on_property_notify(event.xproperty);
 				break;
-			
+
 			case ReparentNotify:
 				on_reparent_notify(event.xreparent);
 				break;
@@ -317,12 +490,12 @@ void Ortle::on_circulate_notify(XCirculateEvent const& event)
 
 void Ortle::on_configure_notify(XConfigureEvent const& event)
 {
-	// raised when event.window is configured, which can include changing 
+	// raised when event.window is configured, which can include changing
 	// its position, size, border width, or stacking order.
 
 	TRACE(event.window, event.x, event.y, event.width, event.height, event.above);
 
-	// if it's the root window, we need to reconfigure our output window and 
+	// if it's the root window, we need to reconfigure our output window and
 	// viewport
 
 	if (event.window == m_root) {
@@ -375,7 +548,7 @@ void Ortle::on_destroy_notify(XDestroyWindowEvent const& event)
 void Ortle::on_graphics_expose(XGraphicsExposeEvent const& event)
 {
 	// raised when XCopyArea or XCopyPlane fails when the source of the copy
-	// is either not available (e.g. an obscured root window), or the rquested 
+	// is either not available (e.g. an obscured root window), or the rquested
 	// area is out of the source's bounds.
 
 	TRACE(event.drawable, event.x, event.y, event.width, event.y);
@@ -396,8 +569,8 @@ void Ortle::on_map_notify(XMapEvent const& event)
 
 void Ortle::on_no_expose(XNoExposeEvent const& event)
 {
-	// raised when XCopyArea or XCopyPlane works.  this tells us that we 
-	// succeeded when trying to copy the root window pixmap, and we can now 
+	// raised when XCopyArea or XCopyPlane works.  this tells us that we
+	// succeeded when trying to copy the root window pixmap, and we can now
 	// draw th eroot window.
 
 	TRACE(event.drawable);
@@ -407,8 +580,8 @@ void Ortle::on_no_expose(XNoExposeEvent const& event)
 
 void Ortle::on_property_notify(XPropertyEvent const& event)
 {
-	// raised when one of event.window's properties changes.  we are only 
-	// interested when this happens on the root window, and then only when its 
+	// raised when one of event.window's properties changes.  we are only
+	// interested when this happens on the root window, and then only when its
 	// wallpaper pixmap property changes.
 
 	TRACE(event.window, event.atom);
@@ -424,8 +597,8 @@ void Ortle::on_reparent_notify(XReparentEvent const& event)
 	// raised when event.window gets a new parent
 
 	// this is explained more in window_manager.cpp, but the short version is:
-	// we need to start managing event.window if it has been reparented to the 
-	// root window, and we need to stop managing it if it has been reparented 
+	// we need to start managing event.window if it has been reparented to the
+	// root window, and we need to stop managing it if it has been reparented
 	// to anything else.
 
 	TRACE(event.window, event.parent, event.x, event.y);
@@ -434,7 +607,7 @@ void Ortle::on_reparent_notify(XReparentEvent const& event)
 }
 
 
-void Ortle::on_shape_notify(XShapeEvent const& event) 
+void Ortle::on_shape_notify(XShapeEvent const& event)
 {
 	// raised when event.window's shape changes
 
