@@ -117,6 +117,8 @@ GLXFBConfig FramebufferCache::choose(int const* attributes)
 					m_table.emplace(info->visualid, framebuffers[i]);
 				}
 
+				TRACE("choosing framebuffer with visual", info->visualid);
+
 				result = framebuffers[i];
 				break;
 			}

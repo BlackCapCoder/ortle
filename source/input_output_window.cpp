@@ -58,7 +58,7 @@ InputOutputWindow::InputOutputWindow(Display* display, Window root, XCreateWindo
 	assert(event.window != root);
 
 
-	TRACE("starting management of input/output window", event.window);
+	TRACE("starting management of input/output window", event.window, "visual id", XVisualIDFromVisual(attributes.visual), "depth", attributes.depth);
 
 	// during initialization and some ReparentNotify events, a fake
 	// XCreateWindowEvent is passed to this function.  in those cases the
@@ -322,6 +322,8 @@ void InputOutputWindow::reconfigure(int x, int y, int width, int height, int bor
 			if (m_pixmap != None) {
 
 				X11::Geometry pixmap_geometry(m_display, m_pixmap);
+
+				TRACE(*this, "pixmap depth", pixmap_geometry.depth);
 
 				if (pixmap_geometry.width && pixmap_geometry.height) {
 					width = static_cast<int>(pixmap_geometry.width) - 2 * border_width;
