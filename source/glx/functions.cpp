@@ -60,7 +60,6 @@ void load_functions()
 	}
 
 
-
 	if (BindTexImageEXT == nullptr) {
 		BindTexImageEXT = reinterpret_cast<BindTexImageEXT_sig>(glXGetProcAddress(reinterpret_cast<GLubyte const*>("glXBindTexImageEXT")));
 		if (!BindTexImageEXT) {
@@ -74,6 +73,7 @@ void load_functions()
 			throw GLX::InitializationError("Failed to load glXReleaseTexImageEXT.");
 		}
 	}
+
 
 	if (SwapIntervalEXT == nullptr) {
 		SwapIntervalEXT = reinterpret_cast<SwapIntervalEXT_sig>(glXGetProcAddress(reinterpret_cast<GLubyte const*>("glXSwapIntervalEXT")));
@@ -90,14 +90,13 @@ void load_functions()
 	}
 
 
-
 	if (GetVideoSyncSGI == nullptr) {
 		GetVideoSyncSGI = reinterpret_cast<GetVideoSyncSGI_sig>(glXGetProcAddress(reinterpret_cast<GLubyte const*>("glXGetVideoSyncSGI")));
 		if (!GetVideoSyncSGI) {
 			// throw GLX::InitializationError("Failed to load glXGetVideoSyncSGI.");
 		}
 	}
-	
+
 	if (WaitVideoSyncSGI == nullptr) {
 		WaitVideoSyncSGI = reinterpret_cast<WaitVideoSyncSGI_sig>(glXGetProcAddress(reinterpret_cast<GLubyte const*>("glXWaitVideoSyncSGI")));
 		if (!WaitVideoSyncSGI) {
@@ -120,7 +119,6 @@ bool framebuffer_supports_rgba(::Display* display, ::GLXFBConfig framebuffer)
 
 	return result == True;
 }
-
 
 
 } // namespace GLX
