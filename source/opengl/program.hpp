@@ -30,7 +30,7 @@ public:
 
 public:
 
-	operator GLuint() const 
+	operator GLuint() const
 	{
 		return m_handle;
 	}

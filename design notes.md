@@ -24,7 +24,7 @@ these and immediately understand the rest.
 
 Generally, these classes don't provide an API beyond a type conversion operator
 that allows them to be implicitly used in C API calls (e.g. given `X11::Display
-display(NULL);`, one could then call `int screen = XDefaultScreen(display);`).  
+display(NULL);`, one could then call `int screen = XDefaultScreen(display);`).
 Note that this does not work for macros (e.g.
 `int screen = DefaultScreen(display);` would fail).
 

@@ -26,7 +26,7 @@ public:
 
 public:
 
-	operator ::Window() const 
+	operator ::Window() const
 	{
 		return m_composite_overlay;
 	}

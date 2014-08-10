@@ -9,9 +9,9 @@ will.
 
 ## Current Status: UNSTABLE/TESTING
 
-Ortle has been stable for me with an Nvidia graphics card and the proprietary 
-driver for months.  It is not stable when I use nouveau (my GPU locks up), and 
-it apparently doesn't work at all on Intel Haswell hardware.  **Please be 
+Ortle has been stable for me with an Nvidia graphics card and the proprietary
+driver for months.  It is not stable when I use nouveau (my GPU locks up), and
+it apparently doesn't work at all on Intel Haswell hardware.  **Please be
 careful when giving it a try!**
 
 
@@ -44,4 +44,4 @@ compton.
 ## Alternatives
 * [xcompmgr](http://cgit.freedesktop.org/xorg/app/xcompmgr/) by Keith Packard
 * [compton](https://github.com/chjj/compton) by Christopher Jeffrey,
-Richard Grenville, et (possibly) al.  
+Richard Grenville, et (possibly) al.
