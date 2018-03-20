@@ -20,6 +20,8 @@ Atom get_composite_manager_atom(::Display* display, int screen)
 {
 	std::string atom_name("_NET_WM_CM_S");
 	atom_name += std::to_string(screen);
+
+  // printf("%s\n", atom_name.c_str());
 	return XInternAtom(display, atom_name.c_str(), False);
 }
 

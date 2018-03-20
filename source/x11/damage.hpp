@@ -1,51 +1,51 @@
-// #ifndef ORTLE_X11_DAMAGE_HPP
-// #define ORTLE_X11_DAMAGE_HPP
+#ifndef ORTLE_X11_DAMAGE_HPP
+#define ORTLE_X11_DAMAGE_HPP
 
 
-// #include <X11/Xlib.h>
-// #include <X11/extensions/Xdamage.h>
-// #include <X11/extensions/Xfixes.h>
+#include <X11/Xlib.h>
+#include <X11/extensions/Xdamage.h>
+#include <X11/extensions/Xfixes.h>
 
 
 
 
-// namespace X11 {
+namespace X11 {
 
 
-// class Damage {
+class Damage {
 
-// public:
+public:
 
-// 	Damage();
-// 	Damage(::Display* display, ::Drawable drawable, int level);
+	Damage();
+	Damage(::Display* display, ::Drawable drawable, int level);
 
-// 	Damage(Damage&& other);
-// 	Damage& operator=(Damage&& other);
+	Damage(Damage&& other);
+	Damage& operator=(Damage&& other);
 
-// 	~Damage();
+	~Damage();
 
-// 	friend void swap(Damage& first, Damage& second);
-
-
-// public:
-
-// 	operator ::Damage() const
-// 	{
-// 		return m_damage;
-// 	}
+	friend void swap(Damage& first, Damage& second);
 
 
-// private:
+public:
 
-// 	::Display* m_display;
-// 	::Drawable m_drawable;
-// 	::Damage m_damage;
-
-// };
-
-
-// } // namespace X11
+	operator ::Damage() const
+	{
+		return m_damage;
+	}
 
 
-// #endif
+private:
+
+	::Display* m_display;
+	::Drawable m_drawable;
+	::Damage m_damage;
+
+};
+
+
+} // namespace X11
+
+
+#endif
 

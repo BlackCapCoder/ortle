@@ -10,7 +10,7 @@ reset    := $(shell tput sgr0)
 
 CXX      ?= g++
 CXXFLAGS += -std=c++11 -Wall -Wextra -pedantic
-LIBS     := -lX11 -lXcomposite -lXext -lXfixes -lGL
+LIBS     := -lX11 -lXcomposite -lXdamage -lXext -lXfixes -lGL
 
 
 SOURCES  := $(wildcard source/*/*.cpp)

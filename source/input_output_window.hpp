@@ -67,6 +67,7 @@ private:
 private:
 
 	void reconfigure(int x, int y, int width, int height, int border_width);
+	void animate();
 
 	void bind_composite_pixmap();
 	void release_composite_pixmap();
@@ -95,6 +96,12 @@ private:
 	int m_width;
 	int m_height;
 	int m_border_width;
+
+	int m_ox;
+	int m_oy;
+	int m_owidth;
+	int m_oheight;
+  int m_animStep;
 
 	bool m_rgba;
 	bool m_shaped;
