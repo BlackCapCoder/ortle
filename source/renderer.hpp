@@ -39,15 +39,21 @@ public:
 public:
 
 	void draw_quad();
+	void draw_shadow(float size, float x, float y, float w, float h);
+	void setNormal();
+	void setShadow();
 
 	void set_border_width(float border_width);
 	void set_window_geometry(float x, float y, float width, float height);
 	void set_rectangle_geometry(float x, float y, float width, float height);
 
+	void set_shadow_side(bool t, bool r, bool b, bool l);
+
 
 private:
 
 	OpenGL::Program m_program;
+	OpenGL::Program m_program_shadow;
 
 	OpenGL::Buffer m_vertex_buffer;
 	OpenGL::Buffer m_index_buffer;
@@ -59,6 +65,7 @@ private:
 	GLint m_u_border_width;
 	GLint m_u_window_geometry;
 	GLint m_u_rectangle_geometry;
+	GLint m_u_shadow;
 
 	GLfloat m_projection_matrix[16];
 

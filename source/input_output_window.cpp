@@ -226,6 +226,7 @@ void InputOutputWindow::render_impl(Renderer& renderer)
     || (m_y + m_height < 0 || m_y > screenH)
      ) return;
 
+
   // first, check that this window is mapped and has a pixmap.  if it is
   // mapped and _doesn't_ have a pixmap, it is likely about to be destroyed
   // or off-screen somewhere, and it doesn't need to be drawn.
@@ -248,32 +249,34 @@ void InputOutputWindow::render_impl(Renderer& renderer)
 
     renderer.set_border_width(static_cast<float>(m_border_width));
 
+
+    // Calculate bounds after animation
+    float x, y, w, h;
+
     if (m_animStep < animMax) {
       float t = (float) m_animStep / (float) animMax;
       float tA = pow(t, animPow);
       float tB = animC*((t=t/animD-1)*t*((animS+1)*t + animS) + 1) + animB;
       float tC = animC*((tA=tA/animD-1)*t*((animSB+1)*tA + animSB) + 1) + animB;
 
-      float x = static_cast<float>(m_ox)      * (1-tC) + static_cast<float>(m_x)      * tC;
-      float y = static_cast<float>(m_oy)      * (1-tC) + static_cast<float>(m_y)      * tC;
-      float w = static_cast<float>(m_owidth)  * (1-tB) + static_cast<float>(m_width)  * tB;
-      float h = static_cast<float>(m_oheight) * (1-tB) + static_cast<float>(m_height) * tB;
-
-      renderer.set_window_geometry(x, y, w, h);
+      x = static_cast<float>(m_ox)      * (1-tC) + static_cast<float>(m_x)      * tC;
+      y = static_cast<float>(m_oy)      * (1-tC) + static_cast<float>(m_y)      * tC;
+      w = static_cast<float>(m_owidth)  * (1-tB) + static_cast<float>(m_width)  * tB;
+      h = static_cast<float>(m_oheight) * (1-tB) + static_cast<float>(m_height) * tB;
 
       m_animStep++;
     } else {
-      renderer.set_window_geometry(
-        static_cast<float>(m_x),
-        static_cast<float>(m_y),
-        static_cast<float>(m_width),
-        static_cast<float>(m_height)
-      );
+      x = m_x;
+      y = m_y;
+      w = m_width;
+      h = m_height;
     }
 
-    // then either draw each subrectangle if we are shaped
 
+    // then either draw each subrectangle if we are shaped
     if (m_shaped && m_rectangles.size() > 0) {
+      renderer.setNormal();
+      renderer.set_window_geometry(x, y, w, h);
 
       for (auto it = m_rectangles.begin(); it != m_rectangles.end(); ++it) {
         renderer.set_rectangle_geometry(
@@ -289,6 +292,11 @@ void InputOutputWindow::render_impl(Renderer& renderer)
     // or just draw the whole window
 
     else {
+      renderer.setShadow();
+      renderer.draw_shadow(20, x, y, w, h);
+
+      renderer.setNormal();
+      renderer.set_window_geometry(x, y, w, h);
       renderer.set_rectangle_geometry(
         static_cast<float>(-m_border_width),
         static_cast<float>(-m_border_width),
@@ -301,7 +309,6 @@ void InputOutputWindow::render_impl(Renderer& renderer)
     gl::BindTexture(gl::TEXTURE_2D, 0);
   }
 }
-
 
 
 
@@ -420,7 +427,6 @@ void InputOutputWindow::bind_composite_pixmap()
   // destroyed or if it is - for whatever reason - not visible.
 
   X11::Pixmap pixmap(m_display, XCompositeNameWindowPixmap(m_display, *this));
-
 
   // case 1: we are already using this pixmap, so do nothing.
 

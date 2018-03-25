@@ -133,14 +133,10 @@ namespace gl
 	PFNCLEAR Clear = 0;
 	typedef void (CODEGEN_FUNCPTR *PFNCLEARCOLOR)(GLfloat , GLfloat , GLfloat , GLfloat );
 	PFNCLEARCOLOR ClearColor = 0;
-	typedef void (CODEGEN_FUNCPTR *PFNBEGIN)(GLenum);
+	typedef void (CODEGEN_FUNCPTR *PFNBEGIN)(GLenum mode);
 	PFNBEGIN Begin = 0;
-	typedef void (CODEGEN_FUNCPTR *PFNEND)();
-	PFNEND End = 0;
-	typedef void (CODEGEN_FUNCPTR *PFNCOLOR3F)(GLfloat, GLfloat, GLfloat);
-	PFNCOLOR3F Color3F = 0;
-	typedef void (CODEGEN_FUNCPTR *PFNVERTEX2F)(GLfloat, GLfloat);
-	PFNVERTEX2F Vertex2F = 0;
+	typedef void (CODEGEN_FUNCPTR *PFNEND)(GLenum mode);
+	PFNBEGIN Begin = 0;
 	typedef void (CODEGEN_FUNCPTR *PFNCLEARSTENCIL)(GLint );
 	PFNCLEARSTENCIL ClearStencil = 0;
 	typedef void (CODEGEN_FUNCPTR *PFNCLEARDEPTH)(GLdouble );
@@ -859,22 +855,12 @@ namespace gl
 		if(!TexImage2D) ++numFailed;
 		DrawBuffer = reinterpret_cast<PFNDRAWBUFFER>(IntGetProcAddress("glDrawBuffer"));
 		if(!DrawBuffer) ++numFailed;
-    Clear =
-reinterpret_cast<PFNCLEAR>(IntGetProcAddress("glClear"));
+		Clear = reinterpret_cast<PFNCLEAR>(IntGetProcAddress("glClear"));
 		if(!Clear) ++numFailed;
 		ClearColor = reinterpret_cast<PFNCLEARCOLOR>(IntGetProcAddress("glClearColor"));
 		if(!ClearColor) ++numFailed;
-    Begin =
-reinterpret_cast<PFNBEGIN>(IntGetProcAddress("glBegin"));
+		Begin = reinterpret_cast<PFNBEGIN>(IntGetProcAddress("glBegin"));
 		if(!Begin) ++numFailed;
-    End =
-reinterpret_cast<PFNEND>(IntGetProcAddress("glEnd"));
-		if(!End) ++numFailed;
-    Color3F =
-reinterpret_cast<PFNCOLOR3F>(IntGetProcAddress("glColor3F"));
-		if(!Color3F) ++numFailed;
-		Vertex2F = reinterpret_cast<PFNVERTEX2F>(IntGetProcAddress("glVertex2F"));
-		if(!Vertex2F) ++numFailed;
 		ClearStencil = reinterpret_cast<PFNCLEARSTENCIL>(IntGetProcAddress("glClearStencil"));
 		if(!ClearStencil) ++numFailed;
 		ClearDepth = reinterpret_cast<PFNCLEARDEPTH>(IntGetProcAddress("glClearDepth"));

@@ -62,7 +62,7 @@ uniform vec4 u_window_geometry;
 // window's border.  these values are in window coordinates!
 
 uniform vec4 u_rectangle_geometry;
-
+uniform vec4 u_shadow;
 
 
 
@@ -77,8 +77,7 @@ layout(location = 1) in vec2 in_texture_coordinates;
 // output to the fragment shader
 
 smooth out vec2 s_texture_coordinates;
-
-
+smooth out vec4 shadow;
 
 
 void main()
@@ -99,10 +98,14 @@ void main()
 	s_texture_coordinates.y = (in_texture_coordinates.y * u_rectangle_geometry.w + (u_rectangle_geometry.y + u_border_width)) / texture_size.y;
 
 
+
 	// commit the values
 
 	gl_Position = u_projection * position;
 
+
+  position.x += u_shadow.x - u_shadow.x; // this is here because I don't understand shaders
+  shadow = u_shadow;
 }
 
 )";
@@ -120,7 +123,62 @@ out vec4 out_color;
 
 void main()
 {
-	out_color = texture(u_texture, s_texture_coordinates);
+  out_color = texture(u_texture, s_texture_coordinates);
+}
+
+)";
+
+char const* l_fragment_shader_shadow_source = R"(
+
+#version 330
+
+uniform sampler2D u_texture;
+
+smooth in vec2 s_texture_coordinates;
+smooth in vec4 shadow;
+
+out vec4 out_color;
+
+const float shadowSize = 1;
+
+void main()
+{
+  out_color = vec4(0,0,0,0);
+
+  bool t = shadow.x == 1;
+  bool r = shadow.y == 1;
+  bool b = shadow.z == 1;
+  bool l = shadow.w == 1;
+
+  if (!(l || r || t || b)) return;
+  out_color = texture(u_texture, vec2(0,0));
+
+  if ( (l && (t || b)) || (r && (t || b)) ) {
+    float x1 = s_texture_coordinates.x;
+    float y1 = s_texture_coordinates.y;
+    float x2 = shadowSize;
+    float y2 = shadowSize;
+
+    if (r) x1 = 1-x1;
+    if (b) y1 = 1-y1;
+
+    out_color.w *= 1-sqrt( pow(x2 - x1, 2) + pow(y2 - y1, 2) )/shadowSize;
+  } else {
+    if (l) {
+      out_color.w *= s_texture_coordinates.x/shadowSize;
+    } else if (t) {
+      out_color.w *= s_texture_coordinates.y/shadowSize;
+    } else if (r) {
+      out_color.w *= (1-s_texture_coordinates.x)/shadowSize;
+    } else if (b) {
+      out_color.w *= (1-s_texture_coordinates.y)/shadowSize;
+    }
+  }
+
+  out_color.x *= 0.7;
+  out_color.y *= 0.7;
+  out_color.z *= 0.7;
+  out_color.w = pow(out_color.w, 2);
 }
 
 )";
@@ -132,6 +190,8 @@ GLfloat const l_projection_matrix[] = {
 	 0.0f, -1.0f,  0.0f,  0.0f,
 	 0.0f,  0.0f,  0.0f,  0.0f,
 	 -1.0f, 1.0f,  0.0f,  1.0f
+
+  , 0.0f, 0.0f, 0.0f, 0.0f
 
 };
 
@@ -150,13 +210,16 @@ GLfloat const l_vertex_data[] = {
 	0.0f, 1.0f, 0.0f, 1.0f,
 	0.0f, 1.0f
 
+  , 0.0f, 0.0f, 0.0f, 0.0f
+
 };
 
 
 GLushort const l_index_data[] = {
 
 	3, 2, 1,
-	1, 3, 0
+	1, 3, 0,
+  2
 
 };
 
@@ -168,6 +231,7 @@ GLushort const l_index_data[] = {
 
 Renderer::Renderer()
 	: m_program(0)
+	, m_program_shadow(0)
 	, m_vertex_buffer()
 	, m_index_buffer()
 	, m_vertex_array()
@@ -176,6 +240,7 @@ Renderer::Renderer()
 	, m_u_border_width(0)
 	, m_u_window_geometry(0)
 	, m_u_rectangle_geometry(0)
+	, m_u_shadow(0)
 	, m_projection_matrix{ 0.0f }
 {
 
@@ -183,9 +248,11 @@ Renderer::Renderer()
 
 
 	OpenGL::Shader vertex_shader(gl::VERTEX_SHADER, l_vertex_shader_source);
-	OpenGL::Shader fragment_shader(gl::FRAGMENT_SHADER, l_fragment_shader_source);
+  OpenGL::Shader fragment_shader(gl::FRAGMENT_SHADER, l_fragment_shader_source);
+  OpenGL::Shader fragment_shader_shadow(gl::FRAGMENT_SHADER, l_fragment_shader_shadow_source);
 
 	m_program = OpenGL::Program{ &vertex_shader, &fragment_shader };
+	m_program_shadow = OpenGL::Program{ &vertex_shader, &fragment_shader_shadow };
 
 
 	gl::BindBuffer(gl::ARRAY_BUFFER, m_vertex_buffer);
@@ -196,11 +263,11 @@ Renderer::Renderer()
 	gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, 6 * sizeof(GLushort), l_index_data, gl::STATIC_DRAW);
 	gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, 0);
 
-
 	gl::BindVertexArray(m_vertex_array);
 
 	gl::BindBuffer(gl::ARRAY_BUFFER, m_vertex_buffer);
 	gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, m_index_buffer);
+
 
 	gl::EnableVertexAttribArray(0);
 	gl::VertexAttribPointer(0, 4, gl::FLOAT, gl::FALSE_, 6 * sizeof(GLfloat), 0);
@@ -218,6 +285,9 @@ Renderer::Renderer()
 	m_u_border_width = gl::GetUniformLocation(m_program, "u_border_width");
 	m_u_window_geometry = gl::GetUniformLocation(m_program, "u_window_geometry");
 	m_u_rectangle_geometry = gl::GetUniformLocation(m_program, "u_rectangle_geometry");
+  m_u_shadow = gl::GetUniformLocation(m_program, "u_shadow");
+
+  printf("%i\n", m_u_shadow);
 
 
 	std::copy(l_projection_matrix, l_projection_matrix + 16, m_projection_matrix);
@@ -234,6 +304,7 @@ Renderer::Renderer()
 
 Renderer::Renderer(Renderer&& other)
 	: m_program(0)
+	, m_program_shadow(0)
 	, m_vertex_buffer(0)
 	, m_index_buffer(0)
 	, m_vertex_array(0)
@@ -242,6 +313,7 @@ Renderer::Renderer(Renderer&& other)
 	, m_u_border_width(0)
 	, m_u_window_geometry(0)
 	, m_u_rectangle_geometry(0)
+	, m_u_shadow(0)
 	, m_projection_matrix{ 0.0f }
 {
 	swap(*this, other);
@@ -272,6 +344,7 @@ void swap(Renderer& first, Renderer& second)
 	using std::swap;
 
 	swap(first.m_program, second.m_program);
+	swap(first.m_program_shadow, second.m_program_shadow);
 	swap(first.m_vertex_buffer, second.m_vertex_buffer);
 	swap(first.m_index_buffer, second.m_index_buffer);
 	swap(first.m_vertex_array, second.m_vertex_array);
@@ -280,6 +353,7 @@ void swap(Renderer& first, Renderer& second)
 	swap(first.m_u_border_width, second.m_u_border_width);
 	swap(first.m_u_window_geometry, second.m_u_window_geometry);
 	swap(first.m_u_rectangle_geometry, second.m_u_rectangle_geometry);
+	swap(first.m_u_shadow, second.m_u_shadow);
 	swap(first.m_projection_matrix, second.m_projection_matrix);
 }
 
@@ -307,20 +381,24 @@ void Renderer::set_viewport(unsigned int width, unsigned int height)
 void Renderer::render(WindowManager::Iterator begin, WindowManager::Iterator end)
 {
 	assert(m_program != 0);
+	// assert(m_program_shadow != 0);
 
 
 	gl::ActiveTexture(gl::TEXTURE0);
 
+	gl::UseProgram(m_program_shadow);
+    gl::UniformMatrix4fv(m_u_projection_matrix, 1, gl::FALSE_, m_projection_matrix);
+    gl::Uniform1i(m_u_texture, 0);
+    gl::BindVertexArray(m_vertex_array);
+
 	gl::UseProgram(m_program);
-
-	gl::UniformMatrix4fv(m_u_projection_matrix, 1, gl::FALSE_, m_projection_matrix);
-	gl::Uniform1i(m_u_texture, 0);
-
-	gl::BindVertexArray(m_vertex_array);
+    gl::UniformMatrix4fv(m_u_projection_matrix, 1, gl::FALSE_, m_projection_matrix);
+    gl::Uniform1i(m_u_texture, 0);
+    gl::BindVertexArray(m_vertex_array);
 
 
 	for (auto it = begin; it != end; ++it) {
-		(*it)->render(*this);
+    (*it)->render(*this);
 	}
 
 
@@ -330,11 +408,67 @@ void Renderer::render(WindowManager::Iterator begin, WindowManager::Iterator end
 }
 
 
+void Renderer::setNormal () {
+  gl::UseProgram(m_program);
+}
+void Renderer::setShadow () {
+  gl::UseProgram(m_program_shadow);
+}
 
 
 void Renderer::draw_quad()
 {
 	gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_SHORT, 0);	
+}
+
+void Renderer::draw_shadow (float size, float x, float y, float w, float h) {
+  // top
+  set_window_geometry(x, y-size, w, size);
+  set_rectangle_geometry(0,0,w,size);
+  set_shadow_side(true, false, false, false);
+  draw_quad();
+
+  // right
+  set_window_geometry(x+w, y, size, h);
+  set_rectangle_geometry(0,0,size,h);
+  set_shadow_side(false, true, false, false);
+  draw_quad();
+
+  // bottom
+  set_window_geometry(x, y+h, w, size);
+  set_rectangle_geometry(0,0,w,size);
+  set_shadow_side(false, false, true, false);
+  draw_quad();
+
+  // left
+  set_window_geometry(x-size, y, size, h);
+  set_rectangle_geometry(0,0,size,h);
+  set_shadow_side(false, false, false, true);
+  draw_quad();
+
+  // tl
+  set_window_geometry(x-size, y-size, size, size);
+  set_rectangle_geometry(0,0,size,size);
+  set_shadow_side(true, false, false, true);
+  draw_quad();
+
+  // tr
+  set_window_geometry(x+w, y-size, size, size);
+  set_rectangle_geometry(0,0,size,size);
+  set_shadow_side(true, true, false, false);
+  draw_quad();
+
+  // br
+  set_window_geometry(x+w, y+h, size, size);
+  set_rectangle_geometry(0,0,size,size);
+  set_shadow_side(false, true, true, false);
+  draw_quad();
+
+  // bl
+  set_window_geometry(x-size, y+h, size, size);
+  set_rectangle_geometry(0,0,size,size);
+  set_shadow_side(false, false, true, true);
+  draw_quad();
 }
 
 
@@ -363,3 +497,12 @@ void Renderer::set_rectangle_geometry(float x, float y, float width, float heigh
 	gl::Uniform4f(m_u_rectangle_geometry, x, y, width, height);
 }
 
+void Renderer::set_shadow_side(bool t, bool r, bool b, bool l)
+{
+	gl::Uniform4f( m_u_shadow
+               , t? 1: 0
+               , r? 1: 0
+               , b? 1: 0
+               , l? 1: 0
+               );
+}

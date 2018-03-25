@@ -1135,6 +1135,10 @@ namespace gl
 	extern void (CODEGEN_FUNCPTR *DrawBuffer)(GLenum mode);
 	extern void (CODEGEN_FUNCPTR *Clear)(GLbitfield mask);
 	extern void (CODEGEN_FUNCPTR *ClearColor)(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
+	extern void (CODEGEN_FUNCPTR *Begin)(GLenum mode);
+	extern void (CODEGEN_FUNCPTR *End)();
+	extern void (CODEGEN_FUNCPTR *Color3F)(GLfloat red, GLfloat green, GLfloat blue);
+	extern void (CODEGEN_FUNCPTR *Vertex2F)(GLfloat x, GLfloat y);
 	extern void (CODEGEN_FUNCPTR *ClearStencil)(GLint s);
 	extern void (CODEGEN_FUNCPTR *ClearDepth)(GLdouble depth);
 	extern void (CODEGEN_FUNCPTR *StencilMask)(GLuint mask);
