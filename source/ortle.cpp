@@ -27,7 +27,7 @@
 #include <X11/extensions/shape.h>
 #include <X11/extensions/shapeproto.h>
 #include <X11/extensions/Xcomposite.h>
-// #include <X11/extensions/Xdamage.h>
+#include <X11/extensions/Xdamage.h>
 #include <X11/extensions/Xfixes.h>
 
 #include <csignal>
@@ -156,7 +156,7 @@ Ortle::Ortle(int, char**)
 	, m_root(XRootWindow(m_display, m_screen))
 
 	, m_composite(m_display, "XComposite", 0, 4, &XCompositeQueryExtension, &XCompositeQueryVersion)
-	// , m_damage(m_display, "XDamage", 1, 1, &XDamageQueryExtension, &XDamageQueryVersion)
+	, m_damage(m_display, "XDamage", 1, 1, &XDamageQueryExtension, &XDamageQueryVersion)
 	, m_fixes(m_display, "XFixes", 2, 0, &XFixesQueryExtension, &XFixesQueryVersion)
 	, m_shape(m_display, "XShape", 1, 1, &XShapeQueryExtension, &XShapeQueryVersion)
 	, m_glx(m_display, "GLX", 1, 4, &glXQueryExtension, &glXQueryVersion)
@@ -350,7 +350,13 @@ Ortle::~Ortle()
 
 		gl::ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+    // int itt = 0;
 		while (g_running) {
+      // if (itt++ % 2 != 0) {
+      //   unsigned int current_retrace = 0;
+			// 	GLX::WaitVideoSyncSGI(1, 0, &current_retrace);
+      //   continue;
+      // }
 
 			// usually this is done in a while loop because there can be  more than
 			// one error waiting.  but, for now at least, every openglerror is
@@ -403,6 +409,8 @@ void Ortle::process_pending_events()
 		XEvent event;
 		XNextEvent(m_display, &event);
 
+    // printf("%i\n", event.type);
+
 		switch (event.type) {
 
 			case CirculateNotify:
@@ -428,7 +436,10 @@ void Ortle::process_pending_events()
 
 			// case Expose:
 			// 	on_expose(event.xexpose);
-			// 	break;
+				// break;
+      case XDamageNotify:
+        printf("xdamage\n");
+        break;
 
 			case GraphicsExpose:
 				on_graphics_expose(event.xgraphicsexpose);

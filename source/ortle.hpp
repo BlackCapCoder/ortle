@@ -15,7 +15,7 @@
 
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
-// #include <X11/extensions/Xdamage.h>
+#include <X11/extensions/Xdamage.h>
 
 
 
@@ -65,7 +65,7 @@ private:
 	Window m_root;
 
 	X11::Extension m_composite;
-	// X11::Extension m_damage;
+	X11::Extension m_damage;
 	X11::Extension m_fixes;
 	X11::Extension m_shape;
 	X11::Extension m_glx;

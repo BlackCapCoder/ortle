@@ -9,7 +9,8 @@ reset    := $(shell tput sgr0)
 
 
 CXX      ?= g++
-CXXFLAGS += -std=c++11 -Wall -Wextra -pedantic
+CXXFLAGS += -std=c++11 -Wall -Wextra -pedantic # -pg
+# LDFLAGS  += -pg
 LIBS     := -lX11 -lXcomposite -lXdamage -lXext -lXfixes -lGL
 
 
@@ -24,7 +25,7 @@ OBJECTS  := $(SOURCES:.cpp=.o)
 .PHONY: all clean debug
 
 
-all: CXXFLAGS += -O2 -DNDEBUG
+all: CXXFLAGS += -Ofast -O3 -frename-registers -funroll-loops -DNDEBUG
 all: $(target)
 
 

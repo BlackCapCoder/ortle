@@ -175,10 +175,10 @@ void main()
     }
   }
 
-  out_color.x *= 0.7;
-  out_color.y *= 0.7;
-  out_color.z *= 0.7;
-  out_color.w = pow(out_color.w, 2);
+  out_color.x *= 0.0;
+  out_color.y *= 0.0;
+  out_color.z *= 0.0;
+  out_color.w = pow(out_color.w, 2) * 0.7;
 }
 
 )";
@@ -190,8 +190,6 @@ GLfloat const l_projection_matrix[] = {
 	 0.0f, -1.0f,  0.0f,  0.0f,
 	 0.0f,  0.0f,  0.0f,  0.0f,
 	 -1.0f, 1.0f,  0.0f,  1.0f
-
-  , 0.0f, 0.0f, 0.0f, 0.0f
 
 };
 
@@ -210,16 +208,13 @@ GLfloat const l_vertex_data[] = {
 	0.0f, 1.0f, 0.0f, 1.0f,
 	0.0f, 1.0f
 
-  , 0.0f, 0.0f, 0.0f, 0.0f
-
 };
 
 
 GLushort const l_index_data[] = {
 
 	3, 2, 1,
-	1, 3, 0,
-  2
+	1, 3, 0
 
 };
 
@@ -286,8 +281,6 @@ Renderer::Renderer()
 	m_u_window_geometry = gl::GetUniformLocation(m_program, "u_window_geometry");
 	m_u_rectangle_geometry = gl::GetUniformLocation(m_program, "u_rectangle_geometry");
   m_u_shadow = gl::GetUniformLocation(m_program, "u_shadow");
-
-  printf("%i\n", m_u_shadow);
 
 
 	std::copy(l_projection_matrix, l_projection_matrix + 16, m_projection_matrix);
@@ -377,7 +370,6 @@ void Renderer::set_viewport(unsigned int width, unsigned int height)
 	gl::Viewport(0, 0, width, height);
 }
 
-
 void Renderer::render(WindowManager::Iterator begin, WindowManager::Iterator end)
 {
 	assert(m_program != 0);
@@ -396,10 +388,14 @@ void Renderer::render(WindowManager::Iterator begin, WindowManager::Iterator end
     gl::Uniform1i(m_u_texture, 0);
     gl::BindVertexArray(m_vertex_array);
 
+  int cnt = 0;
 
 	for (auto it = begin; it != end; ++it) {
+    cnt++;
     (*it)->render(*this);
 	}
+
+  // printf("%i\n", cnt);
 
 
 	gl::BindVertexArray(0);

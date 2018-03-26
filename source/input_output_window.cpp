@@ -74,7 +74,6 @@ InputOutputWindow::InputOutputWindow(Display* display, Window root, XCreateWindo
   assert(event.window != None);
   assert(event.window != root);
 
-
 	m_ox      = event.x;
 	m_oy      = event.y;
 	m_owidth  = event.width;
@@ -275,6 +274,15 @@ void InputOutputWindow::render_impl(Renderer& renderer)
 
     // then either draw each subrectangle if we are shaped
     if (m_shaped && m_rectangles.size() > 0) {
+      renderer.setShadow();
+      renderer.draw_shadow
+          ( 20
+          , x - m_border_width
+          , y - m_border_width
+          , w + 2 * m_border_width
+          , h + 2 * m_border_width
+          );
+
       renderer.setNormal();
       renderer.set_window_geometry(x, y, w, h);
 
@@ -293,7 +301,13 @@ void InputOutputWindow::render_impl(Renderer& renderer)
 
     else {
       renderer.setShadow();
-      renderer.draw_shadow(20, x, y, w, h);
+      renderer.draw_shadow
+          ( 20
+          , x - m_border_width
+          , y - m_border_width
+          , w + 2 * m_border_width
+          , h + 2 * m_border_width
+          );
 
       renderer.setNormal();
       renderer.set_window_geometry(x, y, w, h);
@@ -380,7 +394,6 @@ void InputOutputWindow::reconfigure(int x, int y, int width, int height, int bor
       // itself:
 
       if (m_pixmap != None) {
-
         X11::Geometry pixmap_geometry(m_display, m_pixmap);
 
         TRACE(*this, "pixmap depth", pixmap_geometry.depth);
